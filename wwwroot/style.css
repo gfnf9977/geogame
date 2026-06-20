@@ -535,6 +535,20 @@ body.game-page { overflow: hidden; }
     #editor-modal .modal-content {
         height: 90vh;
     }
+
+    /* Універсальний фікс модального вікна пошуку для вузьких екранів */
+    .search-box {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+    .search-box input,
+    .search-box button {
+        width: 100% !important;
+        flex: none !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        padding: 12px !important;
+    }
 }
 
 /* Максимально ущільнюємо інтерфейс для горизонтального режиму телефону */
