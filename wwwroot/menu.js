@@ -146,6 +146,10 @@ function saveAutoMap(item) {
     searchInput.value = '';
     searchResults.innerHTML = '';
     loadCustomMaps();
+    document.querySelectorAll('.map-card').forEach(c => c.classList.remove('active'));
+    const newCard = document.querySelector(`[data-map="${newMap.id}"]`);
+    if(newCard) newCard.classList.add('active');
+    selectedMapId = newMap.id;
 }
 
 let mapEditor = null;
@@ -303,6 +307,10 @@ function confirmSaveDrawnMap() {
     closeModal('name-modal');
     closeModal('editor-modal');
     loadCustomMaps();
+    document.querySelectorAll('.map-card').forEach(c => c.classList.remove('active'));
+    const newCard = document.querySelector(`[data-map="${newMap.id}"]`);
+    if(newCard) newCard.classList.add('active');
+    selectedMapId = newMap.id;
 }
 
 function loadCustomMaps() {
