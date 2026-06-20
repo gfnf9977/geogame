@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>LocalGuessr - Головне меню</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="menu-page">
+
+    <div class="menu-container">
+        <div class="header">
+            <h1>📍 LocalGuessr</h1>
+        </div>
+
+        <div class="section-title">Базові локації</div>
+        <div class="core-grid" id="core-grid">
+            <div class="map-card active" data-map="chernihiv" style="background-image: url('https://navigator-ukraina.com.ua/media/k2/items/cache/96f744a2f94032ff40920f1c342079ac_XL.jpg');">
+                <div class="title">Чернігів</div>
+                <div><span class="score-badge"></span></div>
+            </div>
+            <div class="map-card" data-map="oblast" style="background-image: url('https://photographers.ua/thumbnails/pictures/42193/800x_dsc2634-pano_1_web.jpg');">
+                <div class="title">Чернігівська Область</div>
+                <div><span class="score-badge"></span></div>
+            </div>
+            <div class="map-card" data-map="ukraine" style="background-image: url('https://photographers.ua/thumbnails/pictures/78321/800x294338456_1427735871026467_6064300818445177171_n.jpg');">
+                <div class="title">Україна</div>
+                <div><span class="score-badge"></span></div>
+            </div>
+            <div class="map-card" data-map="world" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop');">
+                <div class="title">Світ</div>
+                <div><span class="score-badge"></span></div>
+            </div>
+        </div>
+
+        <div class="section-title">Мої мапи</div>
+        <div class="custom-grid" id="custom-grid">
+            <div class="map-card add-new" id="btn-open-search">
+                <div class="icon">➕</div>
+                <div class="title">Створити свою</div>
+            </div>
+        </div>
+
+        <div class="section-title">Налаштування матчу</div>
+        <div class="settings-row">
+            <div class="setting-group">
+                <label>Режим гри</label>
+                <select id="mode-select">
+                    <option value="easy">🟢 Easy (Безліміт)</option>
+                    <option value="hard">🔴 Hard (3 хвилини)</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>Тривалість</label>
+                <select id="rounds-select">
+                    <option value="5">🏁 5 раундів</option>
+                    <option value="1">⚡ 1 раунд</option>
+                    <option value="inf">♾️ Марафон</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>Дозволи (Хардкор)</label>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; text-transform: none; color: #f8fafc; cursor: pointer;">
+                        <input type="checkbox" id="allow-move" checked style="width: 16px; height: 16px; cursor: pointer; accent-color: #10b981;"> Дозволити кроки
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; text-transform: none; color: #f8fafc; cursor: pointer;">
+                        <input type="checkbox" id="allow-pan" checked style="width: 16px; height: 16px; cursor: pointer; accent-color: #10b981;"> Дозволити огляд
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; text-transform: none; color: #f8fafc; cursor: pointer;">
+                        <input type="checkbox" id="allow-zoom" checked style="width: 16px; height: 16px; cursor: pointer; accent-color: #10b981;"> Дозволити зум
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-start" id="start-btn" onclick="startGame()">Почати гру</button>
+    </div>
+
+    <div class="modal-overlay" id="search-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('search-modal')">✖</span>
+            <h2 style="margin-top:0; color:#f8fafc; margin-bottom: 20px;">Додати локацію</h2>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Назва міста, країни...">
+                <button id="search-btn">Шукати</button>
+                <button class="btn-draw" id="btn-open-editor">✏️ Намалювати</button>
+            </div>
+            <div class="search-results" id="search-results"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="editor-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('editor-modal')">✖</span>
+            <div class="editor-header">
+                <h2>Малювання мапи</h2>
+                <span id="point-counter">Точок: 0 / 3 (мінімум)</span>
+            </div>
+
+            <div class="editor-controls">
+                <div class="search-box" style="margin:0; flex:1;">
+                    <input type="text" id="fly-input" placeholder="Перелетіти до міста...">
+                    <button onclick="flyToLocation()" style="background:#475569;">🔍 Знайти</button>
+                </div>
+                <button id="btn-toggle-mode" onclick="toggleDrawMode()">✋ Режим: Совання</button>
+                <button id="btn-undo" onclick="undoPoint()">↩️ Скасувати</button>
+                <button id="btn-save-map" onclick="saveDrawnMap()" disabled>✅ Зберегти мапу</button>
+            </div>
+
+            <div id="editor-map-wrapper">
+                <div id="editor-map"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="name-modal">
+        <div class="modal-content" style="width: 400px;">
+            <span class="close-btn" onclick="closeModal('name-modal')">✖</span>
+            <h2 style="margin-top:0; color:#f8fafc; margin-bottom: 20px;">Назвіть свою локацію</h2>
+            <div class="search-box">
+                <input type="text" id="map-name-input" placeholder="Наприклад: Студмістечко...">
+                <button class="btn-draw" onclick="confirmSaveDrawnMap()">Зберегти</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="menu.js"></script>
+</body>
+</html>
