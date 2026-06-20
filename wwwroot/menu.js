@@ -17,7 +17,6 @@ document.querySelector('.menu-container').addEventListener('click', function(e) 
     if (!card) return;
     if (card.id === 'btn-open-search') {
         document.getElementById('search-modal').classList.add('active');
-        document.getElementById('search-input').focus();
         return;
     }
     document.querySelectorAll('.map-card').forEach(c => c.classList.remove('active'));

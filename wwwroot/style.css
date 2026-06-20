@@ -535,51 +535,59 @@ body.game-page { overflow: hidden; }
     #editor-modal .modal-content {
         height: 90vh;
     }
-
-    /* 1. Фікс кнопок у модальному вікні пошуку (щоб не вилазили за екран) */
-@media screen and (max-width: 768px) {
-    .search-box {
-        flex-wrap: wrap; /* Дозволяємо переносити елементи на новий рядок */
-    }
-    .search-box input {
-        flex: 1 1 100%; /* Інпут займає всю ширину */
-        margin-bottom: 5px;
-    }
-    .search-box button {
-        flex: 1; /* Кнопки ділять простір порівну під інпутом */
-        padding: 10px;
-        font-size: 14px;
-    }
 }
 
-/* 2. Фікс гігантського табло результатів для горизонтального режиму (Landscape) */
+/* Максимально ущільнюємо інтерфейс для горизонтального режиму телефону */
 @media screen and (max-height: 500px) and (orientation: landscape) {
+
+    /* --- ФІКС ТАБЛО РЕЗУЛЬТАТІВ --- */
     #result-panel {
-        top: 5px; /* Піднімаємо вище */
-        padding: 10px 20px;
-        font-size: 14px;
-        width: 80%; /* Робимо вужчим */
+        top: 5px !important;
+        padding: 6px 15px !important;
+        font-size: 13px !important;
+        width: auto !important;
+        min-width: 250px !important;
+        background: rgba(15, 23, 42, 0.85) !important;
+        white-space: nowrap;
     }
     #result-panel h2 {
-        font-size: 18px;
-        margin: 0 0 5px 0 !important;
+        display: none !important;
+    }
+    #result-panel br {
+        display: none !important;
     }
     .score-value {
-        font-size: 18px;
+        font-size: 16px !important;
     }
-    /* Робимо кнопки в лінію, а не стовпчиком, щоб зекономити висоту */
-    #result-panel div[style*="display:flex; flex-direction:column;"] {
+    #result-panel div[style*="display:flex"] {
         flex-direction: row !important;
-        flex-wrap: wrap;
-        gap: 5px !important;
-        justify-content: center;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
+        justify-content: center !important;
+        margin-top: 6px !important;
     }
     #result-panel .action-btn {
-        padding: 6px 12px;
-        font-size: 13px;
-        margin-top: 5px !important;
+        padding: 5px 12px !important;
+        font-size: 12px !important;
+        margin: 0 !important;
         width: auto !important;
-        flex: 1;
     }
-}
+
+    /* --- ФІКС РЕДАКТОРА МАПИ (Малювання) --- */
+    #editor-modal .modal-content {
+        height: 96vh !important;
+        padding: 10px !important;
+        justify-content: flex-start;
+    }
+    .editor-header {
+        display: none !important;
+    }
+    .editor-controls {
+        margin-bottom: 5px !important;
+        flex-wrap: nowrap !important;
+    }
+    .editor-controls button, .search-box input, .search-box button {
+        padding: 6px 10px !important;
+        font-size: 12px !important;
+    }
 }
