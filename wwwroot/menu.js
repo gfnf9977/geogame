@@ -1,3 +1,15 @@
+document.getElementById('btn-enter-lobby').addEventListener('click', function() {
+    const landing = document.getElementById('landing-screen');
+    const lobby = document.getElementById('lobby-screen');
+
+    // Ховаємо сплеш-скрін
+    landing.classList.add('hidden');
+    landing.classList.remove('active');
+
+    // Показуємо лобі
+    lobby.classList.remove('hidden');
+    lobby.classList.add('active');
+});
 let selectedMapId = 'chernihiv';
 
 document.querySelector('.menu-container').addEventListener('click', function(e) {
@@ -321,6 +333,22 @@ function loadCustomMaps() {
     });
     updateHighScoresDisplay();
 }
+
+function loadGlobalStats() {
+    let globalStats = JSON.parse(localStorage.getItem('localguessr_global_stats')) || { games: 0, totalScore: 0, totalDistance: 0, rounds: 0 };
+
+    document.getElementById('stat-games').innerText = globalStats.games;
+    document.getElementById('stat-score').innerText = globalStats.totalScore;
+
+    let avgDistance = globalStats.rounds > 0 ? (globalStats.totalDistance / globalStats.rounds) : 0;
+
+    // Якщо дистанція менша за 1 км, показуємо в метрах для краси
+    let distanceText = avgDistance < 1 ? Math.round(avgDistance * 1000) + ' м' : avgDistance.toFixed(1) + ' км';
+    document.getElementById('stat-distance').innerText = distanceText;
+}
+
+// Викликаємо одразу при завантаженні меню
+loadGlobalStats();
 
 window.deleteMap = function(event, mapId) {
     event.stopPropagation();

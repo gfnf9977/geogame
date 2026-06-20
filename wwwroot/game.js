@@ -97,7 +97,6 @@ function initialize() {
     if (!allowPan) restPanel.innerHTML += '<div class="restriction-badge">🚫 NO PAN</div>';
     if (!allowZoom) restPanel.innerHTML += '<div class="restriction-badge">🚫 NO ZOOM</div>';
 
-    
     const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap', maxZoom: 19
     });
@@ -222,6 +221,8 @@ function startTimer() {
 }
 
 function getRandomPanorama(attempts) {
+    document.getElementById('loading-overlay').classList.remove('hidden');
+
     if (isSeededGame && seedLocations[currentRound - 1]) {
         const seedPt = seedLocations[currentRound - 1];
         const svService = new google.maps.StreetViewService();
@@ -232,8 +233,10 @@ function getRandomPanorama(attempts) {
             if (status === google.maps.StreetViewStatus.OK) {
                 actualLocation = { lat: data.location.latLng.lat(), lng: data.location.latLng.lng() };
                 panorama.setPosition(actualLocation);
+                document.getElementById('loading-overlay').classList.add('hidden');
             } else {
                 alert("Помилка завантаження локації з посилання!");
+                document.getElementById('loading-overlay').classList.add('hidden');
             }
         });
         return;
@@ -269,6 +272,7 @@ function getRandomPanorama(attempts) {
         if (status === google.maps.StreetViewStatus.OK) {
             actualLocation = { lat: data.location.latLng.lat(), lng: data.location.latLng.lng() };
             panorama.setPosition(actualLocation);
+            document.getElementById('loading-overlay').classList.add('hidden');
         } else {
             getRandomPanorama(attempts + 1);
         }
@@ -332,6 +336,17 @@ function calculateResult(isTimeOut) {
             localStorage.setItem('localguessr_scores', JSON.stringify(savedScores));
             isNewRecord = true;
         }
+
+        // НОВЕ: Оновлення глобальної статистики
+        let globalStats = JSON.parse(localStorage.getItem('localguessr_global_stats')) || { games: 0, totalScore: 0, totalDistance: 0, rounds: 0 };
+        globalStats.games += 1;
+        globalStats.totalScore += totalScore;
+
+        let matchDistance = roundHistory.reduce((sum, r) => sum + (r.distance || 0), 0);
+        globalStats.totalDistance += matchDistance;
+        globalStats.rounds += roundHistory.length;
+
+        localStorage.setItem('localguessr_global_stats', JSON.stringify(globalStats));
     }
 
     let buttonsHtml = '';
